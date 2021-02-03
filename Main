@@ -1,0 +1,101 @@
+import java.util.Scanner;
+
+public class Cinema {
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        System.out.println("Enter the number of rows:");
+        int rows = scanner.nextInt();
+        System.out.println("Enter the number of seats in each row:");
+        int seats = scanner.nextInt();
+        char[][] cinema = new char [rows + 1][seats + 1];
+        int sold = 0;
+        
+        fillRoom(rows, seats, cinema);
+        //income(rows, seats);
+        
+        boolean exit = false;
+        do {
+            System.out.println("1. Show the seats");
+            System.out.println("2. Buy a ticket");
+            System.out.println("0. Exit");
+            
+            int choiceNumber = scanner.nextInt();
+        
+            //Menu
+            switch(choiceNumber) {
+                case 0:
+                exit = true;
+                    break;
+                case 1:     
+                    showRoom(cinema);
+                    break;
+                case 2:
+                    ShowSeatPrice(sold, rows, seats, cinema);
+                    break;
+            }
+            
+        } while (exit == false);
+    }
+    
+    //get the rows and seats as 'a' and 'b' for parameters, and calculate the total income if all seats are sold
+    public static void income(int a, int b) {
+        //we check if the room can take in more than 60 guests or not
+        if (a * b > 60) {
+        System.out.println("Total income:" + "\n" + "$" + (((a - a / 2) * b * 8) + ((a / 2 * b) * 10)));
+        } else {
+        System.out.println("Total income:" + "\n" + "$" + (a * b) * 10);
+        }
+    }
+    
+    //check the price of the seat from the input
+    public static void ShowSeatPrice(int sold, int a, int b, char[][] cinema) {
+        System.out.println("Enter a row number:");
+        int row = scanner.nextInt();
+        System.out.println("Enter a seat number in that row:");
+        int seat = scanner.nextInt();
+        cinema[row][seat] = 'B';
+
+        if (a * b <= 60) { //check if the room has more than 60 seats or not - then shows us the price
+            System.out.println("Ticket price: $10\n");
+            sold += 10;
+        } else if (row <= a / 2) {
+            System.out.println("Ticket price: $10\n");
+            sold += 10;
+        } else {
+            System.out.println("Ticket price: $8\n");
+            sold += 8;
+        }
+        showRoom(cinema);
+    }
+    
+    /*first we make a 2d char array, give it two int as rows and columns, and the 2d array itself
+    fill its first row and column with the representative numbers, then the 'S' as available seats*/
+    public static void fillRoom(int rows, int seats, char[][] cinema) {
+        for (int i = 0; i < rows + 1; i++) {
+            for (int j = 0; j < seats + 1; j++) {
+                if (i == 0 && j == 0) {
+                    cinema[i][j] = ' '; //place at [0][0] gets empty value for design
+                } else if (i == 0) {
+                    cinema[i][j] = String.valueOf(j).charAt(0); //first row gets numbers ascending
+                } else if (j == 0) {
+                    cinema[i][j] = String.valueOf(i).charAt(0); //first column gets numbers ascending
+                } else {
+                    cinema[i][j] = 'S'; //fill the remaining array with 'S' as available seats
+                }
+            }
+        }
+    }
+    
+    public static void showRoom(char[][] cinema) {
+        System.out.println("Cinema:");
+        //print out the whole array
+        for (char[] co : cinema) { // for each 'i' array : of the 2d array
+            for (char element : co) { //for each 'j' ELEMENT : of 'i' array
+                System.out.print(element + " ");
+            }
+        System.out.println();
+        }
+    }
+}
